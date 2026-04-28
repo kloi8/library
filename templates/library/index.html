@@ -1,0 +1,88 @@
+{% extends 'library/base.html' %}
+{% block content %}
+
+<h1>Материалы</h1>
+
+<form method="get" class="search-form">
+  <!-- Поле поиска доступно всем авторизованным пользователям -->
+  <input name="q" placeholder="Поиск" value="{{ query }}">
+
+
+     <!-- Ученик -фильтрация только по дисциплинам -->
+
+  {% if profile.role == "student" %}
+      <select name="discipline">
+        <option value="">Все предметы</option>
+        {% for d in disciplines %}
+            <option value="{{ d.id }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+  {% endif %}
+
+
+     <!-- Преподаватель- фильтрация только по классам -->
+ 
+  {% if profile.role == "teacher" %}
+      <select name="class">
+        <option value="">Все классы</option>
+        {% for c in classes %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+  {% endif %}
+
+  
+     <!-- Администратор видит оба фильтра -->
+    
+  {% if profile.role == "admin" %}
+      <!-- Фильтр по предметам -->
+      <select name="discipline">
+        <option value="">Все предметы</option>
+        {% for d in disciplines %}
+            <option value="{{ d.id }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+
+      <!-- Фильтр по классам -->
+      <select name="class">
+        <option value="">Все классы</option>
+        {% for c in classes %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+  {% endif %}
+
+  <button>Найти</button>
+</form>
+
+{% if user.is_authenticated and user.profile.role in 'teacheradmin' %}
+  <a class="btn" href="/add/">Добавить материал</a>
+{% endif %}
+
+<ul class="materials">
+{% for m in materials %}
+  <li>
+    <a href="/m/{{ m.id }}/">{{ m.title }}</a>
+    — {{ m.author }}
+    <small>({{ m.discipline }}, {{ m.school_class }})</small>
+  </li>
+{% empty %}
+  <li>Материалов не найдено.</li>
+{% endfor %}
+</ul>
+
+<div class="pagination">
+  {% if materials.has_previous %}
+      <a href="?page={{ materials.previous_page_number }}">◀</a>
+  {% endif %}
+
+  <span>
+      Страница {{ materials.number }} из {{ materials.paginator.num_pages }}
+  </span>
+
+  {% if materials.has_next %}
+      <a href="?page={{ materials.next_page_number }}">▶</a>
+  {% endif %}
+</div>
+
+{% endblock %}

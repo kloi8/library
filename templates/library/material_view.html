@@ -1,0 +1,11 @@
+{% extends 'library/base.html' %}
+{% block content %}
+<h1>{{ material.title }}</h1>
+<p>Автор: {{ material.author }}</p>
+<p>Предмет: {{ material.discipline }}</p>
+<p>Класс: {{ material.school_class }}</p>
+{% if material.file %}
+  <p><a href="{{ material.file.url }}" target="_blank">Открыть / Скачать файл</a></p>
+{% endif %}
+<a href="javascript:history.back()" class="btn">Назад</a>
+{% endblock %}

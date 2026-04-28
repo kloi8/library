@@ -1,0 +1,9 @@
+{% extends 'library/base.html' %}
+{% block content %}
+<h1>Вход</h1>
+<form method="post">{% csrf_token %}
+  <label>Имя пользователя<input name="username"></label>
+  <label>Пароль<input type="password" name="password"></label>
+  <button>Войти</button>
+</form>
+{% endblock %}
